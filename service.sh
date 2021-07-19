@@ -1,17 +1,21 @@
-
 #!/bin/sh
 
 ## El nombre de la carpeta se utilizará como nombre de servicio, el script se puede correr en cualquier tomcat9
 
-echo "Generando variables.."
+red="\033[0;31m"
+blue="\033[034m"
+yellow="\033[0;33m"
+NC='\033[0m' # No Color
+
+echo -e "${red}Generando variables.."
 
 APPNAME="${PWD##*/}" #nombre del directorio
 DIR="${PWD}" #ruta fija de la carpeta
 
-echo $APPNAME
-echo $DIR
+echo -e "${blue} $APPNAME"
+echo -e "${blue} $DIR"
 
-echo "Generando archivo de servicio.."
+echo -e "${red}Generando archivo de servicio.."
 
 ## Se genera el archivo de configuracion en la carpeta de servicios systemd utilizando la variable como nombre
 
@@ -38,17 +42,18 @@ ExecStop=$DIR/bin/catalina.sh stop
 WantedBy=multi-user.target
 EOF
 
-echo "Iniciando Servicio $APPNAME.."
+echo -e "${red}Iniciando Servicio $APPNAME.."
 
 # Se recargan los servicios de systemd
 
 sudo systemctl daemon-reload
 
-echo "Servicio $APPNAME iniciado. Configurando Autostart.."
+echo -e "${blue}Servicio $APPNAME iniciado. ${red}Configurando Autostart.."
 
 # Se inicia y se habilita el inicio automatico de la aplicacion
 
 sudo systemctl start $APPNAME.service
 sudo systemctl enable $APPNAME.service
+sudo systemctl status $APPNAME.service
 
-echo "Servicio configurado e iniciado. Muchas gracias. SystemsCorp S.A."
+echo -e "${blue}Servicio configurado e iniciado. Muchas gracias.${yellow} SystemsCorp S.A.${NC}"
